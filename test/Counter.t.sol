@@ -2,23 +2,23 @@
 pragma solidity ^0.8.13;
 
 import "forge-std/Test.sol";
-import "../src/Counter.sol";
+import "forge-std/console.sol";
+import "../src/Cache.sol";
 
-contract CounterTest is Test {
-    Counter public counter;
+contract CacheTest is Test {
+    Cache public cache;
 
     function setUp() public {
-        counter = new Counter();
-        counter.setNumber(0);
+        cache = new Cache();
     }
 
-    function testIncrement() public {
-        counter.increment();
-        assertEq(counter.number(), 1);
-    }
+    function testCaching() public {
+        for (uint256 i = 1; i < 5000; i++) {
+            cache.cacheWrite(i * i);
+        }
 
-    function testSetNumber(uint256 x) public {
-        counter.setNumber(x);
-        assertEq(counter.number(), x);
+        for (uint256 i = 1; i < 5000; i++) {
+            assertEq(cache.cacheRead(i), i * i);
+        }
     }
 }
